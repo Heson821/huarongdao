@@ -16,7 +16,7 @@ def prob1():
         (Tile("zz3", 1, 1), [2, 3]),    
         (Tile("zz4", 1, 1), [3, 4])     
     ]
-    return setup, (4, 5), (1, 3)
+    return setup, (4, 5), (1, 2)
 
 def simple():
     setup = [
@@ -30,7 +30,7 @@ def test_equality(board):
     print(board == board2)
 
 if __name__ == "__main__":
-    setup, shape, goal = simple()
+    setup, shape, goal = prob1()
     w, h = shape
 
     tiles = [t[0] for t in setup]
