@@ -1,4 +1,5 @@
 from board import Tile, Board
+from pprint import pprint
 
 if __name__ == "__main__":
     setup = [
@@ -17,3 +18,4 @@ if __name__ == "__main__":
     locations = [t[1] for t in setup]
     board = Board(tiles, locations, 4, 5)
     board.print_ascii()
+    pprint(board.generate_possible_moves())
