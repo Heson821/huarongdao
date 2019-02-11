@@ -1,6 +1,7 @@
 from board import Tile, Board
 from pprint import pprint
 from solvers import BFSSolver
+import copy
 
 def prob1():
     setup = [
@@ -19,17 +20,23 @@ def prob1():
 
 def simple():
     setup = [
-        (Tile("cao", 2, 2), [0, 0])
+        (Tile("cao", 2, 2), [0, 0]),
+        (Tile("guan", 1, 1), [1, 2])
     ]
     return setup, (3, 3), (1, 1)
 
+def test_equality(board):
+    board2 = copy.deepcopy(board)
+    print(board == board2)
+
 if __name__ == "__main__":
-    setup, shape, goal = prob1()
+    setup, shape, goal = simple()
     w, h = shape
 
     tiles = [t[0] for t in setup]
     locations = [t[1] for t in setup]
     board = Board(tiles, locations, w, h)
+    # test_equality(board)
     board.print_ascii()
     pprint(board.generate_possible_moves())
 

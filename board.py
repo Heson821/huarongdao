@@ -57,11 +57,8 @@ class Board:
     symbols = ["."] + list(map(str, np.arange(1,10)))\
               + [chr(ord("a")+i) for i in range(26)]
 
-    def __init__(self, tiles, locations, w, h, board_id=0):
+    def __init__(self, tiles, locations, w, h):
         """tiles and locations have index correspondence
-        Assumption: If two boards have the same id, they are exactly
-        the same But two exactly the same boards may not have the
-        same ids
         """
         self._tiles = {tiles[i].name:(tiles[i],
                                       locations[i])
@@ -77,20 +74,6 @@ class Board:
         self._name_to_id = {names[i]:(i+1) for i in range(len(names))}
         self._id_to_name = {(i+1):names[i] for i in range(len(names))}
         self._update_internal_rep()
-
-        self._board_id = board_id
-
-    def set_board_id(self, board_id):
-        """
-        Assumption: If two boards have the same id, they are exactly
-        the same But two exactly the same boards may not have the
-        same ids
-        """
-        self._board_id = board_id
-
-    @property
-    def board_id(self):
-        return self._board_id
         
     def _update_internal_rep(self):
         self._rep = np.zeros((self._h, self._w), dtype=int)
@@ -188,13 +171,23 @@ class Board:
                 print("%s: %s" % (Board.symbols[tid], self._id_to_name[tid]))
     
     def __eq__(self, other):
-        # if self._rep.shape == other._rep.shape:
-        #     uniq = np.unique(self._rep == other._rep)
-        #     return len(uniq) == 1 and uniq[0] is True
-        # return False
-        return self._board_id == other._board_id
+        if self._rep.shape == other._rep.shape:
+            uniq = np.unique(self._rep == other._rep)
+            return len(uniq) == 1 and uniq[0] == True
+        return False
+        # return self._board_id == other._board_id
 
     def __hash__(self):
         """If two boards are the same, their has must be the same"""
-        return self._board_id
+        return sum(self._tiles["cao"][1])
         
+    def __str__(self):
+        return self.__repr__()
+    
+    def __repr__(self):
+        res = "\n"
+        for r in range(self._rep.shape[0]):
+            for c in range(self._rep.shape[1]):
+                res += Board.symbols[self._rep[r,c]]
+            res += "\n"
+        return res
