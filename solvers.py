@@ -28,22 +28,23 @@ class BFSSolver(Solver):
     # due to all the copy calls, and "not in"
     def solve(self):
         q = deque()
-        visited = set()
         path = {}
         q.append(self._board)
+        visited = set({self._board})
         while len(q) > 0:
-            current = q.popleft()
+            current = q.pop()
             # Check if goxal is reached
             if current.tile_loc(self._goal[0]) == self._goal[1]:
                 # Return path: a list of boards
                 trace = [current]
-                b = current
-                while True:
-                    if b in path:
-                        trace.append(path[b])
-                        b = path[b]
-                    else:
-                        break
+                # b = current
+                # print(path)
+                # # while True:
+                # #     if b in path:
+                # #         trace.append(path[b])
+                # #         b = path[b]
+                # #     if b == trace[0]:
+                # #         break
                 return list(reversed(trace))
             # Explore all possible actions
             actions = current.generate_possible_moves()

@@ -179,7 +179,7 @@ class Board:
 
     def __hash__(self):
         """If two boards are the same, their has must be the same"""
-        return sum(self._tiles["cao"][1])
+        return int(np.sum(np.array([self._rep[:2], self._rep[-2:]])))
         
     def __str__(self):
         return self.__repr__()

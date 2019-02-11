@@ -30,7 +30,7 @@ def test_equality(board):
     print(board == board2)
 
 if __name__ == "__main__":
-    setup, shape, goal = simple()
+    setup, shape, goal = prob1()
     w, h = shape
 
     tiles = [t[0] for t in setup]
