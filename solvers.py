@@ -37,14 +37,15 @@ class BFSSolver(Solver):
             if current.tile_loc(self._goal[0]) == self._goal[1]:
                 # Return path: a list of boards
                 trace = [current]
-                # b = current
-                # print(path)
-                # # while True:
-                # #     if b in path:
-                # #         trace.append(path[b])
-                # #         b = path[b]
-                # #     if b == trace[0]:
-                # #         break
+                b = current
+                seen = set()
+                while b not in seen:
+                    seen.add(b)
+                    if b in path:
+                        trace.append(path[b])
+                        b = path[b]
+                    if b == trace[0]:
+                        break
                 return list(reversed(trace))
             # Explore all possible actions
             actions = current.generate_possible_moves()
@@ -52,10 +53,10 @@ class BFSSolver(Solver):
             for name, a in actions:
                 currentcopy = copy.deepcopy(current)
                 if currentcopy.move_tile(name, a):
-                    path[currentcopy] = current
                     if currentcopy not in visited:
                         visited.add(currentcopy)
                         q.append(currentcopy)
+                        path[currentcopy] = current
                         sys.stdout.write("%s-%s " % (name,
                                                      Tile.Move.to_str(a)))
                         sys.stdout.flush()
