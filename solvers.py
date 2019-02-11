@@ -60,7 +60,7 @@ class BFSSolver(Solver):
                     if currentcopy not in visited:
                         visited.add(currentcopy)
                         q.append(currentcopy)
-                        sys.stdout.write("%s (%d)" % (Tile.Move.to_str(a),
+                        sys.stdout.write("%s(%d) " % (Tile.Move.to_str(a),
                                                       currentcopy.board_id))
                         sys.stdout.flush()
             sys.stdout.write("\n")
