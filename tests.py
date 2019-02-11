@@ -1,5 +1,6 @@
 from board import Tile, Board
 from pprint import pprint
+from solvers import BFSSolver
 
 if __name__ == "__main__":
     setup = [
@@ -20,6 +21,5 @@ if __name__ == "__main__":
     board.print_ascii()
     pprint(board.generate_possible_moves())
 
-    board.move_tile("zz2", Tile.Move.South)
-    board.print_ascii()
-    pprint(board.generate_possible_moves())    
+    solver = BFSSolver(board)
+    print(solver.solve())
