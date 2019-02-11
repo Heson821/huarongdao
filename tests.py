@@ -19,3 +19,7 @@ if __name__ == "__main__":
     board = Board(tiles, locations, 4, 5)
     board.print_ascii()
     pprint(board.generate_possible_moves())
+
+    board.move_tile("zz2", Tile.Move.South)
+    board.print_ascii()
+    pprint(board.generate_possible_moves())    

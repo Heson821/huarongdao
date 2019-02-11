@@ -55,13 +55,14 @@ class Board:
         # Internal representation - a grid. Each cell
         # is an integer. If non-zero, refers to one cell
         # in the tile mapped by that integer. If zero, empty.
-        self._rep = np.zeros((self._h, self._w), dtype=int)
+        self._rep = None
         names = list(sorted(self._tiles.keys()))
         self._name_to_id = {names[i]:(i+1) for i in range(len(names))}
         self._id_to_name = {(i+1):names[i] for i in range(len(names))}
         self._update_internal_rep()
         
     def _update_internal_rep(self):
+        self._rep = np.zeros((self._h, self._w), dtype=int)
         for name in self._name_to_id:
             x, y = self._tiles[name][1]
             tile = self._tiles[name][0]
@@ -100,7 +101,7 @@ class Board:
         x, y = self._tiles[name][1]
         w, h = self._tiles[name][0].dim
         dx, dy = direction
-        region = self._rep[x+dx:x+w+dx, y+dy:y+h+dy]
+        region = self._rep[y+dy:y+h+dy, x+dx:x+w+dx]
         if np.sum(region) == 0:
             return False
         return True
@@ -123,11 +124,13 @@ class Board:
         """Attempts to move `tile` for one step in `direction`.
         If succeed, return True. Otherwise False."""
         x, y = self._tiles[name][1]
+        w, h = self._tiles[name][0].dim
         dx, dy = direction
-        if self.movable(name, direction):
+        if self.movable(name, direction):            
             self._tiles[name] = (self._tiles[name][0],
                                  (x+dx, y+dy))
-            
+            self._rep[y:y+h, x:x+w] = 0
+            self._rep[y+dy:y+h+dy, x+dx:x+w+dx] = self._name_to_id[name]
             return True
         else:
             return False
