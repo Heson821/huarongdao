@@ -24,7 +24,7 @@ def simple():
     return setup, (3, 3)
 
 if __name__ == "__main__":
-    setup, shape = simple()
+    setup, shape = prob1()
     w, h = shape
 
     tiles = [t[0] for t in setup]
@@ -34,5 +34,12 @@ if __name__ == "__main__":
     pprint(board.generate_possible_moves())
 
     solver = BFSSolver(board)
-    solver.set_goal("cao", (1, 3))
-    print(solver.solve())
+    solver.set_goal("cao", (1, 1))
+    trace = solver.solve()
+    print("----------------")
+    for i in range(len(trace)):
+        print("Step %d" % i)
+        if i < len(trace)-1:
+            trace[i].print_ascii(legend=False)
+        else:
+            trace[i].print_ascii(legend=True)

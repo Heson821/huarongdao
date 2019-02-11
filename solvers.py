@@ -38,14 +38,14 @@ class BFSSolver(Solver):
             if current.tile_loc(self._goal[0]) == self._goal[1]:
                 # Return path: a list of boards
                 trace = [current]
+                b = current
                 while True:
-                    b = current
                     if b in path:
                         trace.append(path[b])
                         b = path[b]
                     else:
                         break
-                return trace
+                return list(reversed(trace))
             # Explore all possible actions
             actions = current.generate_possible_moves()
             sys.stdout.write("Exploring board %d... " % current.board_id)
@@ -60,6 +60,7 @@ class BFSSolver(Solver):
                     if currentcopy not in visited:
                         visited.add(currentcopy)
                         q.append(currentcopy)
+                        currentcopy.print_ascii()
                         sys.stdout.write("%s(%d) " % (Tile.Move.to_str(a),
                                                       currentcopy.board_id))
                         sys.stdout.flush()

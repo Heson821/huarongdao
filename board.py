@@ -132,12 +132,18 @@ class Board:
     def will_collide(self, name, direction):
         # Move tile with `name` along direction.
         # Check if there is non-zero numbers in the region
-        # occupied in the moved area.
+        # occupied by other tiles in the moved area.
         x, y = self._tiles[name][1]
         w, h = self._tiles[name][0].dim
         dx, dy = direction
         region = self._rep[y+dy:y+h+dy, x+dx:x+w+dx]
-        if np.sum(region) == 0:
+        present_tids = sorted(np.unique(region))
+        if len(present_tids) == 1\
+           and present_tids[0] == 0:
+            return False
+        elif len(present_tids) == 2\
+             and present_tids[0] == 0\
+             and present_tids[1] == self._name_to_id[name]:
             return False
         return True
 
@@ -171,14 +177,15 @@ class Board:
         else:
             return False
 
-    def print_ascii(self):
+    def print_ascii(self, legend=True):
         for r in range(self._rep.shape[0]):
             for c in range(self._rep.shape[1]):
                 sys.stdout.write(Board.symbols[self._rep[r,c]])
             sys.stdout.write("\n")
-        print("")
-        for tid in sorted(self._id_to_name):
-            print("%s: %s" % (Board.symbols[tid], self._id_to_name[tid]))
+        if legend:
+            print("")
+            for tid in sorted(self._id_to_name):
+                print("%s: %s" % (Board.symbols[tid], self._id_to_name[tid]))
     
     def __eq__(self, other):
         # if self._rep.shape == other._rep.shape:
