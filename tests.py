@@ -15,16 +15,16 @@ def prob1():
         (Tile("zz3", 1, 1), [2, 3]),    
         (Tile("zz4", 1, 1), [3, 4])     
     ]
-    return setup, (4, 5)
+    return setup, (4, 5), (1, 3)
 
 def simple():
     setup = [
         (Tile("cao", 2, 2), [0, 0])
     ]
-    return setup, (3, 3)
+    return setup, (3, 3), (1, 1)
 
 if __name__ == "__main__":
-    setup, shape = prob1()
+    setup, shape, goal = prob1()
     w, h = shape
 
     tiles = [t[0] for t in setup]
@@ -34,11 +34,13 @@ if __name__ == "__main__":
     pprint(board.generate_possible_moves())
 
     solver = BFSSolver(board)
-    solver.set_goal("cao", (1, 1))
+    solver.set_goal("cao", goal)
     trace = solver.solve()
-    print("----------------")
+    print("==================")
     for i in range(len(trace)):
+        print("-------")
         print("Step %d" % i)
+        print("-------")
         if i < len(trace)-1:
             trace[i].print_ascii(legend=False)
         else:
