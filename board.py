@@ -19,15 +19,15 @@ class Tile:
         
         @classmethod
         def to_str(cls, direction):
-            if direction == Move.North:
+            if direction == Tile.Move.North:
                 return "N"
-            if direction == Move.South:
+            if direction == Tile.Move.South:
                 return "S"
-            if direction == Move.East:
+            if direction == Tile.Move.East:
                 return "E"
-            if direction == Move.West:
+            if direction == Tile.Move.West:
                 return "W"
-            raise ValueError("Unrecognized direction %s" % direction)
+            raise ValueError("Unrecognized direction %s" % (direction))
 
     def __init__(self, name, w, h):
         self._name = name

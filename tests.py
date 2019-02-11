@@ -22,4 +22,5 @@ if __name__ == "__main__":
     pprint(board.generate_possible_moves())
 
     solver = BFSSolver(board)
+    solver.set_goal("cao", (1, 3))
     print(solver.solve())

@@ -1,4 +1,4 @@
-from board import Board
+from board import Board, Tile
 from collections import deque
 import copy
 import random
@@ -49,9 +49,9 @@ class BFSSolver(Solver):
             # Explore all possible actions
             actions = current.generate_possible_moves()
             sys.stdout.write("Exploring board %d... " % current.board_id)
-            for a in actions:
+            for name, a in actions:
                 currentcopy = copy.deepcopy(current)
-                if currentcopy.move_tile(a[0], a[1]):
+                if currentcopy.move_tile(name, a):
                     new_id = random.randint(0, 1000000)
                     while new_id in board_ids:
                         new_id = random.randint(0, 1000000)
