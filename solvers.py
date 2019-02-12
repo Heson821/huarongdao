@@ -21,9 +21,13 @@ class Solver:
         raise NotImplemented
 
 
-class BFSSolver(Solver):
+class BruteForceSolver(Solver):
 
-    """Solves the problem with BFS."""
+    """Solves the problem with brute force (BFS or DFS)."""
+    def __init__(self, board, method="DFS"):
+        super(BruteForceSolver, self).__init__(board)
+        self._method = method
+    
     # TODO: This is computationally very expensive
     # due to all the copy calls, and "not in"
     def solve(self):
@@ -32,21 +36,29 @@ class BFSSolver(Solver):
         q.append(self._board)
         visited = set({self._board})
         while len(q) > 0:
-            current = q.popleft()
-            # Check if goxal is reached
+            if self._method == "BFS":
+                current = q.popleft()
+            elif self._method == "DFS":
+                current = q.pop()
+            else:
+                raise ValueError("Unknown method %s" % method)
+            
+            # Check if goal is reached
             if current.tile_loc(self._goal[0]) == self._goal[1]:
                 # Return path: a list of boards
                 trace = [current]
+                actions = [None]
                 b = current
                 seen = set()
                 while b not in seen:
                     seen.add(b)
                     if b in path:
-                        trace.append(path[b])
-                        b = path[b]
+                        b, name, a = path[b]
+                        trace.append(b)
+                        actions.append("%s-%s" % (name, Tile.Move.to_str(a)))
                     if b == trace[0]:
                         break
-                return list(reversed(trace))
+                return list(reversed(trace)), list(reversed(actions))
             # Explore all possible actions
             actions = current.generate_possible_moves()
             sys.stdout.write("Exploring board %s" % current)
@@ -56,9 +68,9 @@ class BFSSolver(Solver):
                     if currentcopy not in visited:
                         visited.add(currentcopy)
                         q.append(currentcopy)
-                        path[currentcopy] = current
+                        path[currentcopy] = (current, name, a)
                         sys.stdout.write("%s-%s " % (name,
                                                      Tile.Move.to_str(a)))
                         sys.stdout.flush()
             sys.stdout.write("\n")
-        return None
+        return None, None

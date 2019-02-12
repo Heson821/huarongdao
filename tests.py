@@ -1,6 +1,6 @@
 from board import Tile, Board
 from pprint import pprint
-from solvers import BFSSolver
+from solvers import BruteForceSolver
 import copy
 
 def prob1():
@@ -30,7 +30,7 @@ def test_equality(board):
     print(board == board2)
 
 if __name__ == "__main__":
-    setup, shape, goal = prob1()
+    setup, shape, goal = simple()
     w, h = shape
 
     tiles = [t[0] for t in setup]
@@ -38,17 +38,19 @@ if __name__ == "__main__":
     board = Board(tiles, locations, w, h)
     # test_equality(board)
     board.print_ascii()
-    pprint(board.generate_possible_moves())
 
-    solver = BFSSolver(board)
+    solver = BruteForceSolver(board, method="DFS")
     solver.set_goal("cao", goal)
-    trace = solver.solve()
-    print("==================")
+    trace, actions = solver.solve()
+    if trace is None:
+        print("No solution found.")
+    print("========== Solution ===========")
     for i in range(len(trace)):
         print("-------")
         print("Step %d" % i)
         print("-------")
         if i < len(trace)-1:
             trace[i].print_ascii(legend=False)
+            print("[" + actions[i] + "]")
         else:
             trace[i].print_ascii(legend=True)
