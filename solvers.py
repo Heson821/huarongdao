@@ -32,7 +32,7 @@ class BFSSolver(Solver):
         q.append(self._board)
         visited = set({self._board})
         while len(q) > 0:
-            current = q.pop()
+            current = q.popleft()
             # Check if goxal is reached
             if current.tile_loc(self._goal[0]) == self._goal[1]:
                 # Return path: a list of boards
