@@ -2,6 +2,7 @@ from board import Tile, Board
 from pprint import pprint
 from solvers import BruteForceSolver
 import copy
+import sys
 
 def prob1():
     setup = [
@@ -16,7 +17,7 @@ def prob1():
         (Tile("zz3", 1, 1), [2, 3]),    
         (Tile("zz4", 1, 1), [3, 4])     
     ]
-    return setup, (4, 5), (2, 1)
+    return setup, (4, 5), (1, 3)
 
 def simple():
     setup = [
@@ -30,6 +31,11 @@ def test_equality(board):
     print(board == board2)
 
 if __name__ == "__main__":
+    if len(sys.argv) <= 1:
+        print("Usage: tests.py <method:BFS|DFS>")
+        sys.exit(1)
+    method = sys.argv[1]
+    
     setup, shape, goal = prob1()
     w, h = shape
 
@@ -39,7 +45,7 @@ if __name__ == "__main__":
     # test_equality(board)
     board.print_ascii()
 
-    solver = BruteForceSolver(board, method="DFS")
+    solver = BruteForceSolver(board, method=method)
     solver.set_goal("cao", goal)
     trace, actions, step_count = solver.solve()
     if trace is None:

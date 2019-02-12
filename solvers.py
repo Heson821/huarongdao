@@ -44,7 +44,7 @@ class BruteForceSolver(Solver):
             elif self._method == "DFS":
                 current = q.pop()
             else:
-                raise ValueError("Unknown method %s" % method)
+                raise ValueError("Unknown method %s" % self._method)
             
             # Check if goal is reached
             if current.tile_loc(self._goal[0]) == self._goal[1]:
