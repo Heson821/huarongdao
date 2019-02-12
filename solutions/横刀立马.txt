@@ -1064,4 +1064,3 @@ a822
 a: zz4
 Total exploration steps: 77181
 Solution found in 3485.202147007s
-kaiyuzh@kaiyuzh-urtata509:~/Documents/Projects/Personal/huarongdao$
