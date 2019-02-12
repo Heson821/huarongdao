@@ -18,7 +18,7 @@ def prob1():
         (Tile("zz3", 1, 1), [2, 3]),    
         (Tile("zz4", 1, 1), [3, 4])     
     ]
-    return setup, (4, 5), (2,1) #(1, 3)
+    return setup, (4, 5), (1, 3)
 
 def simple():
     setup = [
