@@ -30,7 +30,7 @@ def test_equality(board):
     print(board == board2)
 
 if __name__ == "__main__":
-    setup, shape, goal = simple()
+    setup, shape, goal = prob1()
     w, h = shape
 
     tiles = [t[0] for t in setup]
@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     solver = BruteForceSolver(board, method="DFS")
     solver.set_goal("cao", goal)
-    trace, actions = solver.solve()
+    trace, actions, step_count = solver.solve()
     if trace is None:
         print("No solution found.")
     print("========== Solution ===========")
@@ -54,3 +54,4 @@ if __name__ == "__main__":
             print("[" + actions[i] + "]")
         else:
             trace[i].print_ascii(legend=True)
+    print("Total exploration steps: %d" % step_count)

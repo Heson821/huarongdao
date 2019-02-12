@@ -18,6 +18,8 @@ class Solver:
         self._board = board
 
     def solve(self):
+        """Returns a list of board states, actions, and number of exploration steps
+        TODO: it should be optinal to return board states."""
         raise NotImplemented
 
 
@@ -35,6 +37,7 @@ class BruteForceSolver(Solver):
         path = {}
         q.append(self._board)
         visited = set({self._board})
+        step_count = 0
         while len(q) > 0:
             if self._method == "BFS":
                 current = q.popleft()
@@ -58,10 +61,11 @@ class BruteForceSolver(Solver):
                         actions.append("%s-%s" % (name, Tile.Move.to_str(a)))
                     if b == trace[0]:
                         break
-                return list(reversed(trace)), list(reversed(actions))
+                return list(reversed(trace)), list(reversed(actions)), step_count
             # Explore all possible actions
             actions = current.generate_possible_moves()
-            sys.stdout.write("Exploring board %s" % current)
+            sys.stdout.write("(%d) Exploring board %s" % (step_count, current))
+            step_count += 1
             for name, a in actions:
                 currentcopy = copy.deepcopy(current)
                 if currentcopy.move_tile(name, a):
@@ -73,4 +77,4 @@ class BruteForceSolver(Solver):
                                                      Tile.Move.to_str(a)))
                         sys.stdout.flush()
             sys.stdout.write("\n")
-        return None, None
+        return None, None, step_count
