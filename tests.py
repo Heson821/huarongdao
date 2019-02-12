@@ -3,6 +3,7 @@ from pprint import pprint
 from solvers import BruteForceSolver
 import copy
 import sys
+import time
 
 def prob1():
     setup = [
@@ -17,7 +18,7 @@ def prob1():
         (Tile("zz3", 1, 1), [2, 3]),    
         (Tile("zz4", 1, 1), [3, 4])     
     ]
-    return setup, (4, 5), (1, 3)
+    return setup, (4, 5), (2,1) #(1, 3)
 
 def simple():
     setup = [
@@ -47,9 +48,12 @@ if __name__ == "__main__":
 
     solver = BruteForceSolver(board, method=method)
     solver.set_goal("cao", goal)
+    start_time = time.time()
     trace, actions, step_count = solver.solve()
+    end_time = time.time()
     if trace is None:
         print("No solution found.")
+        sys.exit(1)
     print("========== Solution ===========")
     for i in range(len(trace)):
         print("-------")
@@ -61,3 +65,4 @@ if __name__ == "__main__":
         else:
             trace[i].print_ascii(legend=True)
     print("Total exploration steps: %d" % step_count)
+    print("Solution found in %.9fs" % (end_time - start_time))

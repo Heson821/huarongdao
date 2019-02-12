@@ -3,9 +3,10 @@ from collections import deque
 import copy
 import random
 import sys
+import time
 
 
-class Solver:
+class Solver(object):
 
     def __init__(self, board):
         self._board = board
@@ -26,7 +27,7 @@ class Solver:
 class BruteForceSolver(Solver):
 
     """Solves the problem with brute force (BFS or DFS)."""
-    def __init__(self, board, method="DFS"):
+    def __init__(self, board, method="BFS"):
         super(BruteForceSolver, self).__init__(board)
         self._method = method
     
@@ -65,6 +66,7 @@ class BruteForceSolver(Solver):
             # Explore all possible actions
             actions = current.generate_possible_moves()
             sys.stdout.write("(%d) Exploring board %s" % (step_count, current))
+            start_time = time.time()
             step_count += 1
             for name, a in actions:
                 currentcopy = copy.deepcopy(current)
@@ -77,4 +79,7 @@ class BruteForceSolver(Solver):
                                                      Tile.Move.to_str(a)))
                         sys.stdout.flush()
             sys.stdout.write("\n")
+            end_time = time.time()
+            print("time: %.9f" % (end_time - start_time))
+                
         return None, None, step_count

@@ -47,6 +47,9 @@ class Tile:
     def dim(self):
         return (self._w, self._h)
     
+    def same_shape_as(self, other_tile):
+        return self.dim == other_tile.dim
+    
 
 class Board:
     """A board is a collection of tiles with given
@@ -57,8 +60,10 @@ class Board:
     symbols = ["."] + list(map(str, np.arange(1,10)))\
               + [chr(ord("a")+i) for i in range(26)]
 
-    def __init__(self, tiles, locations, w, h):
-        """tiles and locations have index correspondence
+    def __init__(self, tiles, locations, w, h, unique_tiles=False):
+        """tiles and locations have index correspondence.
+        `unique_tiles` is True if tiles of the same shape are
+        treated as different.
         """
         self._tiles = {tiles[i].name:(tiles[i],
                                       locations[i])
@@ -66,24 +71,42 @@ class Board:
         self._w = w
         self._h = h
         self._goal = None
+        self._unique_tiles = unique_tiles
         # Internal representation - a grid. Each cell
         # is an integer. If non-zero, refers to one cell
         # in the tile mapped by that integer. If zero, empty.
         self._rep = None
+
         names = list(sorted(self._tiles.keys()))
         self._name_to_id = {names[i]:(i+1) for i in range(len(names))}
         self._id_to_name = {(i+1):names[i] for i in range(len(names))}
+
+        if not self._unique_tiles:
+            self._rep_shape = None  # tiles with the same shape map to the same integer
+            self._name_to_shape_id = {}
+            shapes = {}
+            for name in self._tiles:
+                sh = self._tiles[name][0].dim
+                if sh not in shapes:
+                    shapes[sh] = set()
+                shapes[sh].add(name)
+            for i, sh in enumerate(sorted(shapes)):
+                for name in shapes[sh]:
+                    self._name_to_shape_id[name] = i+1  # +1 since 0 means empty
         self._update_internal_rep()
         
     def _update_internal_rep(self):
         self._rep = np.zeros((self._h, self._w), dtype=int)
+        if not self._unique_tiles:
+            self._rep_shape = np.zeros((self._h, self._w), dtype=int)
         for name in self._name_to_id:
             x, y = self._tiles[name][1]
             tile = self._tiles[name][0]
             tid = self._name_to_id[name]
-            for dy in range(tile.h):
-                for dx in range(tile.w):
-                    self._rep[y+dy, x+dx] = tid
+            self._rep[y:y+tile.h, x:x+tile.w] = tid
+            if not self._unique_tiles:
+                sid = self._name_to_shape_id[name]
+                self._rep_shape[y:y+tile.h, x:x+tile.w] = sid
 
     def generate_possible_moves(self):
         """Returns a set of moves (name, (dx, dy))
@@ -155,7 +178,9 @@ class Board:
                                  (x+dx, y+dy))
             self._rep[y:y+h, x:x+w] = 0
             self._rep[y+dy:y+h+dy, x+dx:x+w+dx] = self._name_to_id[name]
-            self._board_id = random.randint(0, 10000)
+            if not self._unique_tiles:
+                self._rep_shape[y:y+h, x:x+w] = 0
+                self._rep_shape[y+dy:y+h+dy, x+dx:x+w+dx] = self._name_to_shape_id[name]
             return True
         else:
             return False
@@ -172,13 +197,16 @@ class Board:
     
     def __eq__(self, other):
         if self._rep.shape == other._rep.shape:
-            uniq = np.unique(self._rep == other._rep)
+            if self._unique_tiles:
+                uniq = np.unique(self._rep == other._rep)
+            else:
+                uniq = np.unique(self._rep_shape == other._rep_shape)
             return len(uniq) == 1 and uniq[0] == True
         return False
         # return self._board_id == other._board_id
 
     def __hash__(self):
-        """If two boards are the same, their has must be the same"""
+        """If two boards are the same, their hash must be the same"""
         return int(np.sum(np.array([self._rep[:2], self._rep[-2:]])))
         
     def __str__(self):
